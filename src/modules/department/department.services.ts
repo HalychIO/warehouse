@@ -2,7 +2,7 @@ import {prisma} from "../../config/prisma";
 import {department} from "@prisma/client";
 
 
-export default class DepartmentService {
+export default class DepartmentServices {
     async createDepartment(data: Omit<department, "id">) {
         return prisma.department.create({data});
     }

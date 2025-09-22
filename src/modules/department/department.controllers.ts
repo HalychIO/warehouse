@@ -1,10 +1,10 @@
 import {Request, Response} from "express";
-import DepartmentService from "./department.service";
+import DepartmentServices from "./department.services";
 
 
-const departmentService = new DepartmentService();
+const departmentService = new DepartmentServices();
 
-export class DepartmentController {
+export class DepartmentControllers {
     async create(req: Request, res: Response) {
         try {
             const department = await departmentService.createDepartment(req.body);

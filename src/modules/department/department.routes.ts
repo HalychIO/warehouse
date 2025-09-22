@@ -1,11 +1,11 @@
 import {Router} from "express";
-import {DepartmentController} from "./department.controller";
-import {createDepartmentSchema, updateDepartmentSchema} from "./department.validation";
+import {DepartmentControllers} from "./department.controllers";
+import {createDepartmentSchema, updateDepartmentSchema} from "./department.validations";
 import validate from "../../utils/validate";
 
 const departmentRoutes = Router();
 
-const controller = new DepartmentController();
+const controller = new DepartmentControllers();
 
 departmentRoutes.post("/", validate(createDepartmentSchema), controller.create.bind(controller));
 departmentRoutes.get("/", controller.getAll.bind(controller));

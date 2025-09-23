@@ -1,8 +1,11 @@
 import express from 'express';
-import departmentRoutes from "./modules/department/department.routes";
+import morgan from "morgan";
+
 import {errorHandlerUtil} from "./utils/errorHandler.util";
 import {apiResponseMiddleware} from "./middlewares/apiResponse.middleware";
-import morgan from "morgan";
+
+import departmentRoutes from "./modules/department/department.routes";
+import positionRoutes from "./modules/position/position.routes";
 
 const app = express();
 
@@ -15,6 +18,7 @@ app.use(apiResponseMiddleware);
 
 // --- Routes ---
 app.use("/departments", departmentRoutes);
+app.use("/positions", positionRoutes);
 
 // --- Error handler (останній) ---
 app.use(errorHandlerUtil);

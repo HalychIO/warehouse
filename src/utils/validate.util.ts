@@ -1,6 +1,6 @@
 import {z} from "zod/index";
 
-export default function validate(schema: z.ZodSchema<any>) {
+export default function validateUtil(schema: z.ZodSchema<any>) {
     return (req: any, res: any, next: any) => {
         try {
             schema.parse(req.body);

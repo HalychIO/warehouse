@@ -1,58 +1,46 @@
 import {Request, Response} from "express";
 import DepartmentServices from "./department.services";
+import {catchAsyncUtil} from "../../utils/catchAsync.util";
+import {AppErrorUtil} from "../../utils/AppError.util";
 
 
 const departmentService = new DepartmentServices();
 
 export class DepartmentControllers {
-    async create(req: Request, res: Response) {
-        try {
-            const department = await departmentService.createDepartment(req.body);
-            res.status(201).json(department);
-        } catch (error: any) {
-            res.status(400).json({message: error.message});
-        }
-    }
+    getById = catchAsyncUtil(async (req: Request, res: Response) => {
+        const id = parseInt(req.params.id);
+        if (isNaN(id)) throw new AppErrorUtil(400, "Invalid department ID");
 
-    async getById(req: Request, res: Response) {
-        try {
-            const id = parseInt(req.params.id);
-            const department = await departmentService.getDepartmentById(id);
-            if (!department) {
-                return res.status(404).json({message: "Department not found"});
-            }
-            res.json(department);
-        } catch (error: any) {
-            res.status(400).json({message: error.message});
-        }
-    }
+        const department = await departmentService.getById(id);
 
-    async getAll(req: Request, res: Response) {
-        try {
-            const departments = await departmentService.getAllDepartments();
-            res.json(departments);
-        } catch (error: any) {
-            res.status(400).json({message: error.message});
-        }
-    }
+        if (!department) throw new AppErrorUtil(404, "Department not found");
 
-    async update(req: Request, res: Response) {
-        try {
-            const id = parseInt(req.params.id);
-            const department = await departmentService.updateDepartment(id, req.body);
-            res.json(department);
-        } catch (error: any) {
-            res.status(400).json({message: error.message});
-        }
-    }
+        res.api.success(200, "OK", department);
+    })
 
-    async delete(req: Request, res: Response) {
-        try {
-            const id = parseInt(req.params.id);
-            await departmentService.deleteDepartment(id);
-            res.status(204).send();
-        } catch (error: any) {
-            res.status(400).json({message: error.message});
-        }
-    }
+    create = catchAsyncUtil(async (req: Request, res: Response) => {
+        const department = await departmentService.create(req.body);
+        res.api.success(201, "Created", department);
+    })
+
+    getAll = catchAsyncUtil(async (_req, res: Response) => {
+        const departments = await departmentService.getAll();
+        res.api.success(200, "OK", departments);
+    })
+
+    update = catchAsyncUtil(async (req: Request, res: Response) => {
+        const id = parseInt(req.params.id);
+        if (isNaN(id)) throw new AppErrorUtil(400, "Invalid department ID");
+
+        const department = await departmentService.update(id, req.body);
+        if (!department) throw new AppErrorUtil(404, "Department not found");
+
+        res.api.success(200, "OK", department);
+    })
+
+    delete = catchAsyncUtil(async (req: Request, res: Response) => {
+        const id = parseInt(req.params.id);
+        await departmentService.delete(id);
+        res.api.success(204, "Deleted");
+    })
 }

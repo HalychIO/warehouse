@@ -3,31 +3,31 @@ import {department} from "@prisma/client";
 
 
 export default class DepartmentServices {
-    async createDepartment(data: Omit<department, "id">) {
+    async create(data: Omit<department, "id">) {
         return prisma.department.create({data});
     }
 
-    async getDepartmentById(id: number) {
+    async getById(id: number) {
         return prisma.department.findUnique({
             where: {id},
             include: {employee: true},
         });
     }
 
-    async getAllDepartments() {
+    async getAll() {
         return prisma.department.findMany({
             include: {employee: true},
         });
     }
 
-    async updateDepartment(id: number, data: Partial<Omit<department, "id">>) {
+    async update(id: number, data: Partial<Omit<department, "id">>) {
         return prisma.department.update({
             where: {id},
             data,
         });
     }
 
-    async deleteDepartment(id: number) {
+    async delete(id: number) {
         return prisma.department.delete({where: {id}});
     }
 }

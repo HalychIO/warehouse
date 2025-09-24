@@ -1,5 +1,5 @@
 import {prisma} from "../../config/prisma";
-import {department, PrismaClient} from "@prisma/client";
+import {department, Prisma, PrismaClient} from "@prisma/client";
 
 
 export default class DepartmentServices {
@@ -18,7 +18,7 @@ export default class DepartmentServices {
         });
     }
 
-    async create(data: Omit<department, "id">) {
+    async create(data: Prisma.departmentCreateInput) {
         return this.table.create({data});
     }
 

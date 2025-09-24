@@ -1,5 +1,5 @@
 import {prisma} from "../../config/prisma";
-import {position, PrismaClient} from "@prisma/client";
+import {position, Prisma, PrismaClient} from "@prisma/client";
 
 export default class PositionServices {
     private table: PrismaClient["position"] = prisma.position;
@@ -9,7 +9,7 @@ export default class PositionServices {
             include: {access_level: true},
         });
     }
-    
+
     async getById(id: number) {
         return this.table.findUnique({
             where: {id},
@@ -17,7 +17,7 @@ export default class PositionServices {
         });
     }
 
-    async create(data: Omit<position, "id">): Promise<position | null> {
+    async create(data: Prisma.positionCreateInput): Promise<position | null> {
         return this.table.create({data});
     }
 

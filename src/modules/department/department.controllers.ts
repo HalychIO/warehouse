@@ -2,28 +2,34 @@ import {Request, Response} from "express";
 import DepartmentServices from "./department.services";
 import {catchAsyncUtil} from "../../utils/catchAsync.util";
 import {AppErrorUtil} from "../../utils/AppError.util";
+import throwErrorUtil from "../../utils/throwError.util";
+import IThrowErrorParamsUtil from "../../interfaces/IThrowErrorParams.interface";
 
-
-const departmentService = new DepartmentServices();
+const errors: { [kay: string]: IThrowErrorParamsUtil } = {
+    INVALID_ID: {code: 400, message: "Invalid department ID"},
+    NOT_FOUND: {code: 404, message: "Department not found"},
+};
 
 export class DepartmentControllers {
+    private controller = new DepartmentServices();
+
     getAll = catchAsyncUtil(async (_req, res: Response) => {
-        const departments = await departmentService.getAll();
+        const departments = await this.controller.getAll();
         res.api.success(200, "OK", departments);
     })
 
     getById = catchAsyncUtil(async (req: Request, res: Response) => {
         const id = parseInt(req.params.id);
-        if (isNaN(id)) throw new AppErrorUtil(400, "Invalid department ID");
+        if (isNaN(id)) throwErrorUtil(errors.INVALID_ID);
 
-        const department = await departmentService.getById(id);
-        if (!department) throw new AppErrorUtil(404, "Department not found");
+        const department = await this.controller.getById(id);
+        if (!department) throwErrorUtil(errors.NOT_FOUND);
 
         res.api.success(200, "OK", department);
     })
 
     create = catchAsyncUtil(async (req: Request, res: Response) => {
-        const department = await departmentService.create(req.body);
+        const department = await this.controller.create(req.body);
         res.api.success(201, "Created", department);
     })
 
@@ -31,7 +37,7 @@ export class DepartmentControllers {
         const id = parseInt(req.params.id);
         if (isNaN(id)) throw new AppErrorUtil(400, "Invalid department ID");
 
-        const department = await departmentService.update(id, req.body);
+        const department = await this.controller.update(id, req.body);
         if (!department) throw new AppErrorUtil(404, "Department not found");
 
         res.api.success(200, "OK", department);
@@ -41,7 +47,7 @@ export class DepartmentControllers {
         const id = parseInt(req.params.id);
         if (isNaN(id)) throw new AppErrorUtil(400, "Invalid department ID");
 
-        await departmentService.delete(id);
+        await this.controller.delete(id);
 
         res.api.success(204, "Deleted");
     })

@@ -1,33 +1,35 @@
 import {prisma} from "../../config/prisma";
-import {department} from "@prisma/client";
+import {department, PrismaClient} from "@prisma/client";
 
 
 export default class DepartmentServices {
-    async create(data: Omit<department, "id">) {
-        return prisma.department.create({data});
+    private table: PrismaClient["department"] = prisma.department;
+
+    async getAll() {
+        return this.table.findMany({
+            include: {employee: true},
+        });
     }
 
     async getById(id: number) {
-        return prisma.department.findUnique({
+        return this.table.findUnique({
             where: {id},
             include: {employee: true},
         });
     }
 
-    async getAll() {
-        return prisma.department.findMany({
-            include: {employee: true},
-        });
+    async create(data: Omit<department, "id">) {
+        return this.table.create({data});
     }
 
     async update(id: number, data: Partial<Omit<department, "id">>) {
-        return prisma.department.update({
+        return this.table.update({
             where: {id},
             data,
         });
     }
 
     async delete(id: number) {
-        return prisma.department.delete({where: {id}});
+        return this.table.delete({where: {id}});
     }
 }

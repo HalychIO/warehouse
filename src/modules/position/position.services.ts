@@ -1,32 +1,34 @@
 import {prisma} from "../../config/prisma";
-import {position} from "@prisma/client";
+import {position, PrismaClient} from "@prisma/client";
 
 export default class PositionServices {
-    async create(data: Omit<position, "id">): Promise<position | null> {
-        return prisma.position.create({data});
-    }
+    private table: PrismaClient["position"] = prisma.position;
 
+    async getAll() {
+        return this.table.findMany({
+            include: {access_level: true},
+        });
+    }
+    
     async getById(id: number) {
-        return prisma.position.findUnique({
+        return this.table.findUnique({
             where: {id},
             include: {access_level: true},
         });
     }
 
-    async getAll() {
-        return prisma.position.findMany({
-            include: {access_level: true},
-        });
+    async create(data: Omit<position, "id">): Promise<position | null> {
+        return this.table.create({data});
     }
 
     async update(id: number, data: Partial<Omit<position, "id">>) {
-        return prisma.position.update({
+        return this.table.update({
             where: {id},
             data,
         });
     }
 
     async delete(id: number) {
-        return prisma.position.delete({where: {id}});
+        return this.table.delete({where: {id}});
     }
 }

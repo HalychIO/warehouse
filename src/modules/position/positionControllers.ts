@@ -1,11 +1,11 @@
 import {Request, Response} from "express";
 import PositionServices from "./position.services";
 import {catchAsyncUtil} from "../../utils/catchAsync.util";
-import IThrowErrorParamsUtil from "../../interfaces/IThrowErrorParams.interface";
+import IThrowErrorUtilParams from "../../interfaces/IThrowErrorUtilParams.interface";
 import throwErrorUtil from "../../utils/throwError.util";
 
 
-const errors: { [kay: string]: IThrowErrorParamsUtil } = {
+const errors: { [kay: string]: IThrowErrorUtilParams } = {
     INVALID_ID: {code: 400, message: "Invalid position ID"},
     NOT_FOUND: {code: 404, message: "Position not found"},
 };

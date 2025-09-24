@@ -3,9 +3,9 @@ import DepartmentServices from "./department.services";
 import {catchAsyncUtil} from "../../utils/catchAsync.util";
 import {AppErrorUtil} from "../../utils/AppError.util";
 import throwErrorUtil from "../../utils/throwError.util";
-import IThrowErrorParamsUtil from "../../interfaces/IThrowErrorParams.interface";
+import IThrowErrorUtilParams from "../../interfaces/IThrowErrorUtilParams.interface";
 
-const errors: { [kay: string]: IThrowErrorParamsUtil } = {
+const errors: { [kay: string]: IThrowErrorUtilParams } = {
     INVALID_ID: {code: 400, message: "Invalid department ID"},
     NOT_FOUND: {code: 404, message: "Department not found"},
 };

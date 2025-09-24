@@ -6,6 +6,7 @@ import {apiResponseMiddleware} from "./middlewares/apiResponse.middleware";
 
 import departmentRoutes from "./modules/department/department.routes";
 import positionRoutes from "./modules/position/position.routes";
+import accessLevelRoutes from "./modules/accessLevel/accessLevel.routes";
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(apiResponseMiddleware);
 // --- Routes ---
 app.use("/departments", departmentRoutes);
 app.use("/positions", positionRoutes);
+app.use("/access-level", accessLevelRoutes);
 
 // --- Error handler (останній) ---
 app.use(errorHandlerUtil);

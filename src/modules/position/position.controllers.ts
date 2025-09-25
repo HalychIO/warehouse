@@ -47,6 +47,9 @@ export class PositionControllers {
         const id = parseInt(req.params.id);
         if (isNaN(id)) throwErrorUtil(errors.INVALID_ID);
 
+        const position = await this.controller.getById(id);
+        if (!position) throwErrorUtil(errors.NOT_FOUND);
+
         await this.controller.delete(id);
 
         res.api.success(204, "Deleted");

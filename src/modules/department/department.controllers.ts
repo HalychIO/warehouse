@@ -47,6 +47,9 @@ export class DepartmentControllers {
         const id = parseInt(req.params.id);
         if (isNaN(id)) throw new AppErrorUtil(400, "Invalid department ID");
 
+        const department = await this.controller.getById(id);
+        if (!department) throwErrorUtil(errors.NOT_FOUND);
+        
         await this.controller.delete(id);
 
         res.api.success(204, "Deleted");

@@ -50,8 +50,8 @@ export class PositionControllers {
         const position = await this.controller.getById(id);
         if (!position) throwErrorUtil(errors.NOT_FOUND);
 
-        await this.controller.delete(id);
-
-        res.api.success(204, "Deleted");
+        await this.controller.delete(id).then(() => {
+            res.api.success(204, "Deleted");
+        });
     })
 }

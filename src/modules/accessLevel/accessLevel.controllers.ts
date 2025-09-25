@@ -47,8 +47,8 @@ export class AccessLevelControllers {
         const id = parseInt(req.params.id);
         if (!isNaN(id)) throwErrorUtil(errors.INVALID_ID);
 
-        await this.controller.delete(id);
-
-        res.api.success(204, "Deleted");
+        await this.controller.delete(id).then(() => {
+            res.api.success(204, "Deleted");
+        });
     })
 }

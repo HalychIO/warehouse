@@ -1,14 +1,18 @@
-import {z} from "zod/index";
-import {AppErrorUtil} from "./AppError.util";
 import {NextFunction, Request, Response} from "express";
+import {ZodObject} from "zod";
 
-export default function validateUtil(schema: z.ZodSchema<any>) {
+interface ValidationSchemas {
+    body?: ZodObject<any>;
+    params?: ZodObject<any>;
+    query?: ZodObject<any>;
+}
+
+export default function validateUtil(schemas: ValidationSchemas) {
     return (req: Request, _res: Response, next: NextFunction) => {
-        try {
-            schema.parse(req.body);
-            next();
-        } catch (e: any) {
-            throw new AppErrorUtil(400, e.errors[0].message);
-        }
+        if (schemas.body) req.body = schemas.body.parse(req.body);
+        if (schemas.params) req.params = schemas.params.parse(req.params) as any;
+        if (schemas.query) req.query = schemas.query.parse(req.query) as any;
+
+        next();
     };
 }

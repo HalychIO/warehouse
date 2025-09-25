@@ -9,8 +9,8 @@ const controller = new AccessLevelControllers();
 
 accessLevelRoutes.get("/", controller.getAll);
 accessLevelRoutes.get("/:id", controller.getById);
-accessLevelRoutes.post("/", validateUtil(createAccessLevelSchema), controller.create);
-accessLevelRoutes.put("/:id", validateUtil(updateAccessLevelSchema), controller.update);
+accessLevelRoutes.post("/", validateUtil({body: createAccessLevelSchema}), controller.create);
+accessLevelRoutes.put("/:id", validateUtil({body: updateAccessLevelSchema}), controller.update);
 accessLevelRoutes.delete("/:id", controller.delete);
 
 export default accessLevelRoutes;

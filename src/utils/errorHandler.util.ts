@@ -1,9 +1,20 @@
 import {ErrorRequestHandler} from "express";
 import {AppErrorUtil} from "./AppError.util";
 import {Prisma} from "@prisma/client";
+import {ZodError} from "zod";
 
 export const errorHandlerUtil: ErrorRequestHandler = (err, _req, res, _next) => {
-    // Prisma помилки
+    // Zod errors
+    if (err instanceof ZodError) {
+        const details = err.issues.map(issue => ({
+            path: issue.path.join("."),
+            message: issue.message,
+        }));
+
+        return res.api.error(400, "Validation failed", details);
+    }
+
+    // Prisma error
     if (err instanceof Prisma.PrismaClientKnownRequestError) {
         let message = "Database error";
         let statusCode = 400;
@@ -22,33 +33,21 @@ export const errorHandlerUtil: ErrorRequestHandler = (err, _req, res, _next) => 
                 statusCode = 500;
         }
 
-        return res.status(statusCode).json({
-            status: "fail",
-            message,
-        });
+        return res.api.error(statusCode, message)
     }
 
-    // Кастомні AppErrorUtil
+    // AppErrorUtil
     if (err instanceof AppErrorUtil) {
-        return res.status(err.statusCode).json({
-            status: "error",
-            message: err.message,
-        });
+        return res.api.error(err.statusCode, err.message);
     }
 
-    // Стандартні JS помилки
+    // JS error
     if (err instanceof Error) {
         console.error("Unexpected error:", err); // Лог для сервера
 
-        return res.status(500).json({
-            status: "error",
-            message: err.message || "Internal server error",
-        });
+        return res.api.error(500, err.message || "Internal server error")
     }
 
-    // Якщо прилетіло щось взагалі неочікуване
-    return res.status(500).json({
-        status: "error",
-        message: "Unknown error",
-    });
+    // default
+    return res.api.error(500, err.message || "Unknown error")
 }

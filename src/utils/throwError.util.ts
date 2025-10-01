@@ -1,6 +1,6 @@
 import {AppErrorUtil} from "./AppError.util";
 import IThrowErrorUtilParams from "../interfaces/IThrowErrorUtilParams.interface";
 
-export default function throwErrorUtil({code, message}: IThrowErrorUtilParams) {
+export default function throwErrorUtil({code, message}: IThrowErrorUtilParams): never {
     throw new AppErrorUtil(code, message);
 }

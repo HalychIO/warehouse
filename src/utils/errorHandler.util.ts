@@ -2,8 +2,13 @@ import {ErrorRequestHandler} from "express";
 import {AppErrorUtil} from "./AppError.util";
 import {Prisma} from "@prisma/client";
 import {ZodError} from "zod";
+import {logger} from "../config/logger";
 
-export const errorHandlerUtil: ErrorRequestHandler = (err, _req, res, _next) => {
+export const errorHandlerUtil: ErrorRequestHandler = (err, req, res, _next) => {
+    logger.error(
+        `Error: ${err.message} | URL: ${req.originalUrl} | Method: ${req.method}`
+    );
+
     // Zod errors
     if (err instanceof ZodError) {
         const details = err.issues.map(issue => ({

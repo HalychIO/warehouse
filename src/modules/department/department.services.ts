@@ -1,5 +1,5 @@
-import {prisma} from "../../config/prisma";
 import {department, Prisma, PrismaClient} from "@prisma/client";
+import {prisma} from "../../config/prisma";
 
 
 export default class DepartmentServices {

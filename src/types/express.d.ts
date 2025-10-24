@@ -16,4 +16,12 @@ declare module "express-serve-static-core" {
             ) => Response<ApiResponse>;
         };
     }
+
+    interface Request {
+        user?: {
+            id: number;
+            employee_id: number;
+            [key: string]: any;
+        };
+    }
 }

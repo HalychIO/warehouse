@@ -96,6 +96,7 @@ model employee {
   contacn_info     String             @db.Text
   hire_date        DateTime           @db.Date
   status           String             @db.VarChar(50)
+  email            String             @unique(map: "email") @db.VarChar(50)
   asset_assingment asset_assingment[]
   position         position           @relation(fields: [position_id], references: [id], onUpdate: Restrict, map: "employee_ibfk_1")
   department       department         @relation(fields: [department_id], references: [id], onUpdate: Restrict, map: "employee_ibfk_2")
@@ -171,6 +172,16 @@ model purcase_order_item {
 
   @@index([product_id], map: "product_id")
   @@index([purcase_order_id], map: "purcase_order_id")
+}
+
+model refresh_token {
+  id           Int          @id @default(autoincrement())
+  token        String       @unique(map: "token") @db.VarChar(512)
+  userId       Int
+  createdAt    DateTime     @default(now()) @db.Timestamp(0)
+  user_account user_account @relation(fields: [userId], references: [id], onUpdate: Restrict, map: "refresh_token_ibfk_1")
+
+  @@index([userId], map: "userId")
 }
 
 model sales_order {
@@ -250,11 +261,12 @@ model transaction {
 }
 
 model user_account {
-  id            Int      @id @default(autoincrement())
-  employee_id   Int      @unique(map: "employee_id")
-  username      String   @db.VarChar(200)
-  password_hash String   @db.VarChar(200)
-  last_login    DateTime @db.Date
+  id            Int             @id @default(autoincrement())
+  employee_id   Int             @unique(map: "employee_id")
+  username      String          @unique(map: "username") @db.VarChar(200)
+  password_hash String          @db.VarChar(200)
+  last_login    DateTime        @db.Date
   is_active     Boolean
-  employee      employee @relation(fields: [employee_id], references: [id], onUpdate: Restrict, map: "user_account_ibfk_1")
+  refresh_token refresh_token[]
+  employee      employee        @relation(fields: [employee_id], references: [id], onUpdate: Restrict, map: "user_account_ibfk_1")
 }
